@@ -13,7 +13,6 @@ interface StudentAttributes {
 }
 
 export interface StudentInput extends Optional<StudentAttributes, 'id'> {}
-export interface StudentOutput extends Required<StudentAttributes> {}
 
 class Student
   extends Model<StudentAttributes, StudentInput>
