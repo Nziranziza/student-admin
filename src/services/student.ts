@@ -1,5 +1,5 @@
 import { Op } from 'sequelize';
-import { Student } from '../db/models';
+import { Enrollment, Student, StudyGroup } from '../db/models';
 import { StudentInput } from '../db/models/Student';
 
 type GetAllFilters = {
@@ -36,7 +36,10 @@ export const getAll = async ({ limit = 10, page = 1, search }: GetAllFilters = {
   const data = await Student.findAll({
     limit,
     offset,
-    where
+    where,
+    include: [
+      { model: Enrollment, attributes: ['id'], as: 'enrollments', include: [StudyGroup] }
+    ]
   });
   return {
     page,
@@ -47,7 +50,11 @@ export const getAll = async ({ limit = 10, page = 1, search }: GetAllFilters = {
 };
 
 export const getById = (id: number): Promise<Student | null> => {
-  return Student.findByPk(id);
+  return Student.findByPk(id, {
+    include: [
+      { model: Enrollment, attributes: ['id'], as: 'enrollments', include: [StudyGroup] }
+    ]
+  });
 };
 
 export const create = (payload: StudentInput): Promise<Student> => {

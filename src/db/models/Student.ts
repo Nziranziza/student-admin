@@ -1,4 +1,4 @@
-import { DataTypes, Model, Optional } from 'sequelize';
+import { DataTypes, Model, ModelStatic, Optional } from 'sequelize';
 import sequelizeConnection from '../config';
 
 interface StudentAttributes {
@@ -10,6 +10,10 @@ interface StudentAttributes {
   email: string;
   createdAt?: Date;
   updatedAt?: Date;
+}
+
+type AssociatedModels = {
+  Enrollment: ModelStatic<Model<any, any>>,
 }
 
 export interface StudentInput extends Optional<StudentAttributes, 'id'> {}
@@ -26,6 +30,10 @@ class Student
   public email!: string;
   public readonly createdAt?: Date;
   public readonly updatedAt?: Date;
+
+  static associate({ Enrollment }: AssociatedModels) {
+    Student.hasMany(Enrollment, { foreignKey: 'studentId', onDelete: 'CASCADE', as: 'enrollments' });
+  }
 }
 
 Student.init(

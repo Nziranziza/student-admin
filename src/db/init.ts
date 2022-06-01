@@ -1,12 +1,15 @@
-import { Student, StudyGroup } from './models';
+import { Student, StudyGroup, Enrollment } from './models';
 
 const isDevMode = process.env.NODE_ENV === 'development';
 
-const databaseInit = () => {
-  Student.sync({
+const databaseInit = async () => {
+  await Student.sync({
     alter: isDevMode,
   });
-  StudyGroup.sync({
+  await StudyGroup.sync({
+    alter: isDevMode
+  });
+  await Enrollment.sync({
     alter: isDevMode
   })
 }
