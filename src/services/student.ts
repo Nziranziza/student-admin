@@ -50,7 +50,7 @@ export const getById = (id: number): Promise<Student | null> => {
   return Student.findByPk(id);
 };
 
-export const create = (payload: StudentInput): Promise<Student | null> => {
+export const create = (payload: StudentInput): Promise<Student> => {
   return Student.create(payload);
 };
 

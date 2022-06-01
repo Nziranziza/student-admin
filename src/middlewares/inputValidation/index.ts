@@ -4,7 +4,9 @@ import { ObjectSchema } from 'joi';
 import { joiErrorCustomizer } from '../../utilities';
 import {
   createStudentSchema,
-  updateStudentSchema
+  updateStudentSchema,
+  createStudyGroupSchema,
+  updateStudyGroupSchema
 } from './joiSchema';
 
 const inputValidation = (schema: ObjectSchema) => (req: Request , res: Response, next: NextFunction) => {
@@ -22,3 +24,5 @@ const inputValidation = (schema: ObjectSchema) => (req: Request , res: Response,
 
 export const createStudentInputValidation = inputValidation(createStudentSchema);
 export const updateStudentInputValidation = inputValidation(updateStudentSchema);
+export const createStudyGroupInputValidation = inputValidation(createStudyGroupSchema);
+export const updateStudyGroupInputValidation = inputValidation(updateStudyGroupSchema);
