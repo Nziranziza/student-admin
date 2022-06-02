@@ -1,0 +1,12 @@
+.nav.nav-tabs {
+  .nav-link {
+    background-color: $gray;
+    color: $body-color
+  }
+  .nav-link.active {
+    background-color: #fff;
+    span:first-child {
+      color: $secondary
+    }
+  }
+}
