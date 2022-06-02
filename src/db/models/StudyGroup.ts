@@ -12,8 +12,8 @@ interface StudyGroupAttributes {
 }
 
 type AssociatedModels = {
-  Enrollment: ModelStatic<Model<any, any>>,
-}
+  Enrollment: ModelStatic<Model<any, any>>;
+};
 
 export interface StudyGroupInput extends Optional<StudyGroupAttributes, 'id'> {}
 
@@ -30,7 +30,11 @@ class StudyGroup
   public readonly updatedAt?: Date;
 
   static associate({ Enrollment }: AssociatedModels) {
-    this.hasMany(Enrollment, { foreignKey: 'studyGroupId', onDelete: 'CASCADE', as: 'enrolled' });
+    this.hasMany(Enrollment, {
+      foreignKey: 'studyGroupId',
+      onDelete: 'CASCADE',
+      as: 'enrolled',
+    });
   }
 }
 
@@ -39,24 +43,25 @@ StudyGroup.init(
     id: {
       type: DataTypes.INTEGER.UNSIGNED,
       autoIncrement: true,
-      primaryKey: true
+      primaryKey: true,
     },
     name: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
     },
     leader: {
       type: DataTypes.STRING,
     },
     subject: {
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
     },
-   time: {
-     type: DataTypes.STRING
-   }
-  }, {
+    time: {
+      type: DataTypes.STRING,
+    },
+  },
+  {
     timestamps: true,
-    sequelize: sequelizeConnection
+    sequelize: sequelizeConnection,
   }
 );
 

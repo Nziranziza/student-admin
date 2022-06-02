@@ -13,8 +13,8 @@ interface StudentAttributes {
 }
 
 type AssociatedModels = {
-  Enrollment: ModelStatic<Model<any, any>>,
-}
+  Enrollment: ModelStatic<Model<any, any>>;
+};
 
 export interface StudentInput extends Optional<StudentAttributes, 'id'> {}
 
@@ -32,7 +32,11 @@ class Student
   public readonly updatedAt?: Date;
 
   static associate({ Enrollment }: AssociatedModels) {
-    Student.hasMany(Enrollment, { foreignKey: 'studentId', onDelete: 'CASCADE', as: 'enrollments' });
+    Student.hasMany(Enrollment, {
+      foreignKey: 'studentId',
+      onDelete: 'CASCADE',
+      as: 'enrollments',
+    });
   }
 }
 

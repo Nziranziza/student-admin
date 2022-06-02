@@ -4,16 +4,26 @@ import { StudyGroupInput } from '../db/models/StudyGroup';
 export const getAll = (): Promise<StudyGroup[]> => {
   return StudyGroup.findAll({
     include: [
-      { model: Enrollment, attributes: ['id'], as: 'enrolled', include: [Student]}
-    ]
+      {
+        model: Enrollment,
+        attributes: ['id'],
+        as: 'enrolled',
+        include: [Student],
+      },
+    ],
   });
 };
 
 export const getById = (id: number): Promise<StudyGroup | null> => {
   return StudyGroup.findByPk(id, {
     include: [
-      { model: Enrollment, attributes: ['id'], as: 'enrolled', include: [Student]}
-    ]
+      {
+        model: Enrollment,
+        attributes: ['id'],
+        as: 'enrolled',
+        include: [Student],
+      },
+    ],
   });
 };
 

@@ -5,55 +5,70 @@ import { StudentInput } from '../db/models/Student';
 type GetAllFilters = {
   page?: number;
   limit?: number;
-  search?: any
-}
+  search?: any;
+};
 
 type Where = {
   name?: {
-    [Op.like]: string
-  }
-}
+    [Op.like]: string;
+  };
+};
 
 type GetAllResponse = {
   page: number;
-  pages: number,
-  count: number,
-  data: Student[],
-}
+  pages: number;
+  count: number;
+  data: Student[];
+};
 
-export const getAll = async ({ limit = 10, page = 1, search }: GetAllFilters = {}): Promise<GetAllResponse> => {
+export const getAll = async ({
+  limit = 10,
+  page = 1,
+  search,
+}: GetAllFilters = {}): Promise<GetAllResponse> => {
   const offset: number = (page - 1) * limit;
   let where: Where = {};
-  if(search) {
+  if (search) {
     where = {
       name: {
-      [Op.like]: `%${search}%`
-    }}
+        [Op.like]: `%${search}%`,
+      },
+    };
   }
   const count = await Student.count({
-    where
-  })
+    where,
+  });
   const data = await Student.findAll({
     limit,
     offset,
     where,
     include: [
-      { model: Enrollment, attributes: ['id'], as: 'enrollments', include: [StudyGroup] }
-    ]
+      {
+        model: Enrollment,
+        attributes: ['id'],
+        as: 'enrollments',
+        include: [StudyGroup],
+      },
+    ],
   });
   return {
     page,
     pages: Math.ceil(count / limit) || 1,
     count,
-    data
-  }
+    data,
+  };
 };
 
 export const getById = (id: number): Promise<Student | null> => {
   return Student.findByPk(id, {
     include: [
-      { model: Enrollment, attributes: ['id'], as: 'enrollments', include: [StudyGroup] }
-    ]
+      {
+        model: Enrollment,
+        attributes: ['id'],
+        as: 'enrollments',
+        include: [StudyGroup],
+      },
+    ],
   });
 };
 

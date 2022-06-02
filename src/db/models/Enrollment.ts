@@ -10,13 +10,16 @@ interface EnrollmentAttributes {
 }
 
 type AssociatedModels = {
-  StudyGroup: ModelStatic<Model<any, any>>,
-  Student: ModelStatic<Model<any, any>>
-}
+  StudyGroup: ModelStatic<Model<any, any>>;
+  Student: ModelStatic<Model<any, any>>;
+};
 
 export interface EnrollmentInput extends Optional<EnrollmentAttributes, 'id'> {}
 
-class Enrollment extends Model<EnrollmentAttributes, EnrollmentInput> implements EnrollmentAttributes {
+class Enrollment
+  extends Model<EnrollmentAttributes, EnrollmentInput>
+  implements EnrollmentAttributes
+{
   public id!: number;
   public studyGroupId!: number;
   public studentId!: number;
@@ -25,27 +28,30 @@ class Enrollment extends Model<EnrollmentAttributes, EnrollmentInput> implements
 
   static associate({ StudyGroup, Student }: AssociatedModels) {
     this.belongsTo(StudyGroup, { foreignKey: 'studyGroupId' });
-    this.belongsTo(Student, { foreignKey: 'studentId' })
+    this.belongsTo(Student, { foreignKey: 'studentId' });
   }
 }
 
-Enrollment.init({
-  id: {
-    type: DataTypes.INTEGER.UNSIGNED,
-    autoIncrement: true,
-    primaryKey: true
-  }, 
-  studentId: {
-    type: DataTypes.INTEGER.UNSIGNED,
-    allowNull: false
+Enrollment.init(
+  {
+    id: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      autoIncrement: true,
+      primaryKey: true,
+    },
+    studentId: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: false,
+    },
+    studyGroupId: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: false,
+    },
   },
-  studyGroupId: {
-    type: DataTypes.INTEGER.UNSIGNED,
-    allowNull: false
+  {
+    timestamps: true,
+    sequelize: sequelizeConnection,
   }
-}, {
-  timestamps: true,
-  sequelize: sequelizeConnection
-});
+);
 
 export default Enrollment;

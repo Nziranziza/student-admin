@@ -1,7 +1,10 @@
 import { Router } from 'express';
 
 import { studentController } from '../controllers';
-import { createStudentInputValidation, updateStudentInputValidation } from '../middlewares';
+import {
+  createStudentInputValidation,
+  updateStudentInputValidation,
+} from '../middlewares';
 
 const studentRouter: Router = Router();
 

@@ -1,28 +1,33 @@
 import { Enrollment } from '../db/models';
 import { EnrollmentInput } from '../db/models/Enrollment';
 
-export const create = async (payload: EnrollmentInput): Promise<Enrollment | null> => {
+export const create = async (
+  payload: EnrollmentInput
+): Promise<Enrollment | null> => {
   const { studentId } = payload;
   const enrollments = await Enrollment.count({
     where: {
-      studentId
-    }
+      studentId,
+    },
   });
-  if(enrollments >=4) {
-    return null
+  if (enrollments >= 4) {
+    return null;
   }
   const [enrollment] = await Enrollment.findOrCreate({
-    where: payload
+    where: payload,
   });
 
-  return enrollment
+  return enrollment;
 };
 
-export const destroy = (studyGroupId: number, studentId: number): Promise<number> => {
+export const destroy = (
+  studyGroupId: number,
+  studentId: number
+): Promise<number> => {
   return Enrollment.destroy({
     where: {
       studyGroupId,
-      studentId
-    }
-  })
-}
+      studentId,
+    },
+  });
+};
