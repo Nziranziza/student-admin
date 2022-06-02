@@ -17,6 +17,7 @@ type Where = {
 type GetAllResponse = {
   page: number;
   pages: number;
+  pageSize: number;
   count: number;
   data: Student[];
 };
@@ -54,6 +55,7 @@ export const getAll = async ({
   return {
     page,
     pages: Math.ceil(count / limit) || 1,
+    pageSize: limit,
     count,
     data,
   };

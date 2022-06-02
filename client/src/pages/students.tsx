@@ -1,9 +1,12 @@
-import { Row, Col, Form, Table, Button, Nav } from 'react-bootstrap';
+import { Row, Col, Form } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserAlt, faEdit } from '@fortawesome/free-solid-svg-icons';
+import { faUserAlt } from '@fortawesome/free-solid-svg-icons';
 
 import SearchInput from '../components/search-input';
 import Avatar from '../components/avatar';
+import { useStudents } from '../hooks';
+import Table, { Column } from '../components/table';
+import { studentDataToRows } from '../utilities';
 
 const studyGroups = [
   'Typography',
@@ -12,44 +15,6 @@ const studyGroups = [
   'Web designers',
   'Black magicians',
   'Gamer boys',
-];
-
-const students = [
-  {
-    name: 'John Doe Smith',
-    sex: 'Male',
-    placeOfBirth: 'Budapest',
-    dateOfBirth: '1989.05.21',
-    groups: ['Biologists', 'Typography', 'Chemistry Capital', 'Gamer Boys'],
-  },
-  {
-    name: 'Peter Erdosi',
-    sex: 'Male',
-    placeOfBirth: 'Budapest',
-    dateOfBirth: '1989.05.21',
-    groups: ['Biologists'],
-  },
-  {
-    name: 'Rebecaa Truli',
-    sex: 'Male',
-    placeOfBirth: 'Budapest',
-    dateOfBirth: '1989.05.21',
-    groups: ['Biologists'],
-  },
-  {
-    name: 'Ted Bundy',
-    sex: 'Male',
-    placeOfBirth: 'Budapest',
-    dateOfBirth: '1989.05.21',
-    groups: ['Web designers', 'Chemistry Capital'],
-  },
-  {
-    name: 'Rob Thorton',
-    sex: 'Male',
-    placeOfBirth: 'Budapest',
-    dateOfBirth: '1989.05.21',
-    groups: ['Web designers'],
-  },
 ];
 
 type StudyGroupListProps = {
@@ -68,23 +33,36 @@ function StudyGroupList({ data }: StudyGroupListProps) {
   return <span>{data.join(',')}</span>;
 }
 
-function PageSwitcher() {
-  return (
-    <Nav variant="pills" defaultActiveKey="#1">
-      <Nav.Item>
-        <Nav.Link href="#1">1</Nav.Link>
-      </Nav.Item>
-      <Nav.Item>
-        <Nav.Link href="#2">2</Nav.Link>
-      </Nav.Item>
-      <Nav.Item>
-        <Nav.Link href="#3">3</Nav.Link>
-      </Nav.Item>
-    </Nav>
-  );
-}
+const columns: Column[] = [
+  {
+    title: '',
+    render: () => <Form.Check type="checkbox" />,
+  },
+  {
+    title: '',
+    render: (item: any) => <Avatar firstName={item.name} />,
+  },
+  {
+    title: 'Name',
+    key: 'name',
+  },
+  {
+    title: 'Sex',
+    key: 'sex',
+  },
+  {
+    title: 'Place and Date of Birth',
+    key: 'placeDateOfBirth',
+  },
+  {
+    title: 'Groups',
+    key: 'groups',
+    render: (item: any) => <StudyGroupList data={item.groups} />,
+  },
+];
 
 export default function Students() {
+  const { loading, data } = useStudents();
   return (
     <div>
       <Row>
@@ -96,60 +74,27 @@ export default function Students() {
           <div className="mt-3 mt-md-5 mb-3">
             <label className="text-muted mb-2">FILTERS FOR STUDY GROUPS</label>
             <Form>
-              {studyGroups.map((label) => (
-                <Form.Check label={label} type="checkbox" />
+              {studyGroups.map((label, index) => (
+                <Form.Check key={index} label={label} type="checkbox" />
               ))}
             </Form>
           </div>
         </Col>
         <Col md="9">
-          <div className="d-flex align-items-center justify-content-between">
-            <div className="d-flex align-items-center">
-            <div className="d-none d-md-block">
-              <FontAwesomeIcon icon={faUserAlt} />
-              <span className="fw-bolder ms-2">125 Students</span>
-            </div>
-            <Button variant="secondary ms-md-3">
-              <FontAwesomeIcon icon={faEdit} />
-              <span className="ms-2">New</span>
-            </Button>
-            </div>
-            <PageSwitcher />
-          </div>
-          <Table responsive="md" className="mt-3 mt-md-5">
-            <thead>
-              <tr>
-                <th>
-                  <Form.Check type="checkbox" />
-                </th>
-                <th></th>
-                <th className="text-muted">Name</th>
-                <th className="text-muted">Sex</th>
-                <th className="text-muted">Place and Date of Birth</th>
-                <th className="text-muted text-end">Groups</th>
-              </tr>
-            </thead>
-            <tbody>
-              {students.map((student) => (
-                <tr>
-                  <td>
-                    <Form.Check type="checkbox" />
-                  </td>
-                  <td>
-                    <Avatar firstName={student.name} />
-                  </td>
-                  <td>{student.name}</td>
-                  <td>{student.sex}</td>
-                  <td>
-                    {student.placeOfBirth},{student.dateOfBirth}
-                  </td>
-                  <td className="text-end">
-                    {<StudyGroupList data={student.groups} />}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
+          <Table
+            tableTitle={
+              <>
+                <FontAwesomeIcon icon={faUserAlt} />
+                <span className="fw-bolder ms-3">125 students</span>
+              </>
+            }
+            pageSize={data?.pageSize}
+            className="mt-3 mt-md-5"
+            data={studentDataToRows(data?.data)}
+            columns={columns}
+            dataLength={data?.count}
+            loading={loading}
+          />
         </Col>
       </Row>
     </div>
