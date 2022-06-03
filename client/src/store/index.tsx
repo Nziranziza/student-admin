@@ -1,7 +1,15 @@
-import { createContext, ReactNode } from 'react';
+import { createContext, ReactNode, useReducer } from 'react';
 
-const initialState = {
-  students: [],
+import { studentReducer } from './reducers';
+
+const initialState: any = {
+  students: {
+    page: 1,
+    pages: 1,
+    pageSize: 10,
+    count: 0,
+    data: []
+  },
 };
 
 type StoreProviderProps = {
@@ -11,5 +19,11 @@ type StoreProviderProps = {
 export const Store = createContext(initialState);
 
 export const StoreProvider = ({ children }: StoreProviderProps) => {
-  return <Store.Provider value={initialState}>{children}</Store.Provider>;
+  const [state, dispatch] = useReducer(studentReducer, initialState);
+
+  return (
+    <Store.Provider value={{ state, dispatch }}>
+      {children}
+    </Store.Provider>
+  );
 };

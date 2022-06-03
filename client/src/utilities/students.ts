@@ -22,7 +22,7 @@ export function createStudentRow(
   };
 }
 
-export function studentDataToRows(data: any = []): StudentRow[] {
+export function studentDataToRows(data: any[] = []): StudentRow[] {
   return data.map((student: any) =>
     createStudentRow(
       student.id,
@@ -30,7 +30,7 @@ export function studentDataToRows(data: any = []): StudentRow[] {
       student.sex,
       student.placeOfBirth,
       student.dateOfBirth,
-      student.enrollments.map(({ StudyGroup }: any) => StudyGroup)
+      student.enrollments?.map(({ StudyGroup }: any) => StudyGroup)
     )
   );
 }

@@ -51,7 +51,10 @@ export const create = async (
 ) => {
   try {
     const student = await studentService.create(req.body);
-    return res.status(HTTP_STATUS.CREATED).json(student);
+    return res.status(HTTP_STATUS.CREATED).json({
+      ...student.toJSON(),
+      enrollments: []
+    });
   } catch (error) {
     if (error instanceof UniqueConstraintError) {
       return res.status(HTTP_STATUS.CONFLICT).json({

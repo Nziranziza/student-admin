@@ -6,6 +6,7 @@ import express, {
   Response,
 } from 'express';
 import 'dotenv/config';
+import path from 'path';
 
 import routes from './routes';
 import databaseInit from './db/init';
@@ -16,13 +17,14 @@ const { port = 3000 } = process.env;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.get('/', async (req: Request, res: Response): Promise<Response> => {
-  return res
-    .status(HTTP_STATUS.OK)
-    .send({ message: `Welcome to student administration framework` });
-});
 
 app.use('/api/v1', routes);
+
+app.use(express.static(path.join(__dirname, '../client/build/')));
+
+app.get('/*', (req: Request, res: Response) => {
+  res.sendFile(path.join(__dirname, '../client/build/', 'index.html'))
+})
 
 app.use((error: Errback, req: Request, res: Response, next: NextFunction) => {
   if (res.headersSent) {

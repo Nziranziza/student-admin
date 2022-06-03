@@ -1,9 +1,15 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons'
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
-export default function SearchInput() {
+type SearchInputProps = {
+  onSearch?: (text: string) => void
+}
+
+export default function SearchInput({
+  onSearch = () => {}
+}: SearchInputProps) {
   return <label className="d-flex align-items-center p-2 search-input">
     <FontAwesomeIcon icon={faSearch} />
-    <input className="w-100 border-0 bg-transparent outline-none" />
+    <input onChange={(e) => onSearch(e.target.value)} className="w-100 border-0 bg-transparent outline-none" />
   </label>
 }
