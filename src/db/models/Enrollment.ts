@@ -27,8 +27,8 @@ class Enrollment
   public readonly updatedAt?: Date;
 
   static associate({ StudyGroup, Student }: AssociatedModels) {
-    this.belongsTo(StudyGroup, { foreignKey: 'studyGroupId' });
-    this.belongsTo(Student, { foreignKey: 'studentId' });
+    this.belongsTo(StudyGroup, { foreignKey: 'studyGroupId', onDelete: 'CASCADE' });
+    this.belongsTo(Student, { foreignKey: 'studentId', onDelete: 'CASCADE' });
   }
 }
 

@@ -13,7 +13,7 @@ import databaseInit from './db/init';
 import { HTTP_STATUS } from './constants';
 
 const app: Application = express();
-const { port = 3000 } = process.env;
+const { PORT = 3000 } = process.env;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -35,8 +35,8 @@ app.use((error: Errback, req: Request, res: Response, next: NextFunction) => {
 
 try {
   databaseInit();
-  app.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}`);
+  app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
   });
 } catch (error: any) {
   console.log(`Error occurred: ${error.message}`);
