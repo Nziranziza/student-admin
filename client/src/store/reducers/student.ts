@@ -1,25 +1,25 @@
-import { ADD_STUDENTS, ADD_STUDENT } from "../types";
+import { ADD_STUDENTS, ADD_STUDENT } from '../types';
+import initialState from '../initialState';
+
 const getStudents = (state: any, students: any) => {
   return {
     ...state,
-    students
+    ...students
   }
 };
 
 const addStudent = (state: any, student: any) => {
   return {
     ...state,
-    students: {
       ...state.students,
       data: [
         student,
-        ...state.students.data
+        ...state.data
       ]
-    }
   }
 }
 
-export default function reducer(state: any, action: any) {
+export default function reducer(state: any = initialState.students, action: any) {
   switch(action.type) {
     case ADD_STUDENTS:
       return getStudents(state, action.payload);

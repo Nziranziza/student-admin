@@ -5,20 +5,11 @@ import { useState } from 'react';
 
 import SearchInput from '../components/search-input';
 import Avatar from '../components/avatar';
-import { useStudents } from '../hooks';
+import { useStudents, useStudyGroups } from '../hooks';
 import Table, { Column } from '../components/table';
 import { studentDataToRows } from '../utilities';
 import Modal from '../components/modal';
 import { StudentInputs } from '../services/student';
-
-const studyGroups = [
-  'Typography',
-  'Biologists',
-  'Chemistry Capital',
-  'Web designers',
-  'Black magicians',
-  'Gamer boys',
-];
 
 type StudyGroupListProps = {
   data: string[];
@@ -119,7 +110,7 @@ function StudentForm({ onSubmit }: StudentFormProps) {
   });
   const handleSubmit = (e: React.FormEvent<EventTarget>) => {
     e.preventDefault();
-    onSubmit(form)
+    onSubmit(form);
   };
 
   const onInputChange = (key: string, value: string) => {
@@ -181,11 +172,32 @@ function StudentForm({ onSubmit }: StudentFormProps) {
 export default function Students() {
   const { loading, data, onSearch, onPageChange, onCreate } = useStudents();
   const [showModal, setShowModal] = useState(false);
+  const { data: groups } = useStudyGroups();
+  const [groupIds, setGroupIds] = useState<string[]>([]);
 
   const handleStudentCreate = (form: StudentInputs) => {
     onCreate(form);
     setShowModal(false);
   };
+
+  const onGroupFilter = (groupId: string) => {
+    if(groupIds.find(id => id === groupId)) {
+      const newIds = groupIds.filter(id => id !== groupId);
+      onSearch({
+        groups: newIds
+      });
+      setGroupIds(newIds);
+    } else {
+      const newIds = [
+        ...groupIds,
+        groupId
+      ];
+      onSearch({
+        groups: newIds
+      });
+      setGroupIds(newIds);
+    }
+  }
 
   return (
     <div>
@@ -193,13 +205,19 @@ export default function Students() {
         <Col md="3" className="pe-md-5">
           <div>
             <label className="mb-2 text-muted">SEARCH FOR NAME</label>
-            <SearchInput onSearch={onSearch} />
+            <SearchInput
+              onSearch={(keyWord: string) =>
+                onSearch({
+                  search: keyWord,
+                })
+              }
+            />
           </div>
           <div className="mt-3 mt-md-5 mb-3">
             <label className="text-muted mb-2">FILTERS FOR STUDY GROUPS</label>
             <Form>
-              {studyGroups.map((label, index) => (
-                <Form.Check key={index} label={label} type="checkbox" />
+              {groups.map(({ name, id }: any, index) => (
+                <Form.Check onChange={() => onGroupFilter(id)} key={index} label={name} type="checkbox" />
               ))}
             </Form>
           </div>

@@ -32,7 +32,7 @@ class Student
   public readonly updatedAt?: Date;
 
   static associate({ Enrollment }: AssociatedModels) {
-    Student.hasMany(Enrollment, {
+    this.hasMany(Enrollment, {
       foreignKey: 'studentId',
       onDelete: 'CASCADE',
       as: 'enrollments',

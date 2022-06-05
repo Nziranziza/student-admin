@@ -1,16 +1,8 @@
 import { createContext, ReactNode, useReducer } from 'react';
 
-import { studentReducer } from './reducers';
+import reducer from './reducers';
+import initialState from './initialState';
 
-const initialState: any = {
-  students: {
-    page: 1,
-    pages: 1,
-    pageSize: 10,
-    count: 0,
-    data: []
-  },
-};
 
 type StoreProviderProps = {
   children: ReactNode;
@@ -19,7 +11,7 @@ type StoreProviderProps = {
 export const Store = createContext(initialState);
 
 export const StoreProvider = ({ children }: StoreProviderProps) => {
-  const [state, dispatch] = useReducer(studentReducer, initialState);
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   return (
     <Store.Provider value={{ state, dispatch }}>

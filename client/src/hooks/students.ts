@@ -6,10 +6,11 @@ import { Store } from '../store';
 import { addStudent, addStudents } from '../store/actions';
 import { StudentFilters, StudentInputs } from '../services/student';
 
+
 type UseStudents = {
   loading: boolean;
   data: any;
-  onSearch: (searchKeyWord: string) => void;
+  onSearch: (filters: StudentFilters) => void;
   onPageChange: (pageNumber?: number) => void;
   onCreate: (form: StudentInputs) => void;
   error: any;
@@ -37,10 +38,10 @@ export function useStudents(): UseStudents {
     getStudents();
   }, [getStudents]);
 
-  const onSearch = debounce((searchKeyWord: string) => {
+  const onSearch = debounce((filters: StudentFilters = {}) => {
     setFilters({
       page: 1,
-      search: searchKeyWord,
+      ...filters
     });
   }, 500);
 

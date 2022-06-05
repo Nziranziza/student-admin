@@ -3,8 +3,9 @@ import { AxiosPromise } from 'axios';
 import API from './api';
 
 export type StudentFilters = {
-  page?: number,
-  search?: string
+  page?: number;
+  search?: string;
+  'groups'?: string[]
 }
 
 export type Gender = 'Male' | 'Female'

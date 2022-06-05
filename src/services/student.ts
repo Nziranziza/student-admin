@@ -5,13 +5,19 @@ import { StudentInput } from '../db/models/Student';
 type GetAllFilters = {
   page?: number;
   limit?: number;
-  search?: any;
+  search?: string;
+  groups?: number[];
+};
+
+type WhereStudyGroup = {
+  '$enrollments.studyGroupId$': number;
 };
 
 type Where = {
   name?: {
     [Op.like]: string;
   };
+  [Op.or]?: WhereStudyGroup[];
 };
 
 type GetAllResponse = {
@@ -22,10 +28,20 @@ type GetAllResponse = {
   data: Student[];
 };
 
+const include = [
+  {
+    model: Enrollment,
+    attributes: ['id'],
+    as: 'enrollments',
+    include: [StudyGroup]
+  }
+]
+
 export const getAll = async ({
   limit = 10,
   page = 1,
   search,
+  groups = [],
 }: GetAllFilters = {}): Promise<GetAllResponse> => {
   const offset: number = (page - 1) * limit;
   let where: Where = {};
@@ -36,21 +52,26 @@ export const getAll = async ({
       },
     };
   }
+  if (groups.length) {
+    where = {
+      ...where,
+      [Op.or]: [
+        ...groups.map((groupId) => ({ '$enrollments.studyGroupId$': groupId })),
+      ],
+    };
+  }
+
   const count = await Student.count({
     where,
+    include,
   });
+
   const data = await Student.findAll({
     limit,
     offset,
     where,
-    include: [
-      {
-        model: Enrollment,
-        attributes: ['id'],
-        as: 'enrollments',
-        include: [StudyGroup],
-      },
-    ],
+    subQuery: false,
+    include,
   });
   return {
     page,
@@ -63,14 +84,7 @@ export const getAll = async ({
 
 export const getById = (id: number): Promise<Student | null> => {
   return Student.findByPk(id, {
-    include: [
-      {
-        model: Enrollment,
-        attributes: ['id'],
-        as: 'enrollments',
-        include: [StudyGroup],
-      },
-    ],
+    include,
   });
 };
 
@@ -90,7 +104,9 @@ export const update = async (
   id: number,
   payload: Partial<StudentInput>
 ): Promise<Student | null> => {
-  const student = await Student.findByPk(id);
+  const student = await Student.findByPk(id, {
+    include
+  });
   if (!student) {
     return null;
   }
