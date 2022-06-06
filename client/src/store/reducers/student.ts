@@ -11,7 +11,7 @@ const getStudents = (state: any, students: any) => {
 const addStudent = (state: any, student: any) => {
   return {
     ...state,
-      ...state.students,
+    count: state.count + 1,
       data: [
         student,
         ...state.data

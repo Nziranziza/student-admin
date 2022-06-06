@@ -38,10 +38,11 @@ export function useStudents(): UseStudents {
     getStudents();
   }, [getStudents]);
 
-  const onSearch = debounce((filters: StudentFilters = {}) => {
+  const onSearch = debounce((_filters: StudentFilters = {}) => {
     setFilters({
       page: 1,
-      ...filters
+      ...filters,
+      ..._filters
     });
   }, 500);
 

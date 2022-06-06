@@ -3,6 +3,7 @@ import { Table as DefaultTable, Nav, Button, Spinner } from 'react-bootstrap';
 import classnames from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAdd } from '@fortawesome/free-solid-svg-icons';
+import { NoContent } from './icons';
 
 export type Column = {
   title: string;
@@ -20,6 +21,7 @@ type TableProps = {
   loading?: boolean;
   onPageChange?: (pageNumber?: number) => void;
   onAddItem?: () => void;
+  emptyStateMessage?: string;
 };
 
 type PageSwitcherProps = {
@@ -54,6 +56,7 @@ export default function Table({
   loading,
   onPageChange = () => {},
   onAddItem = () => {},
+  emptyStateMessage = 'No contents!'
 }: TableProps) {
   const numberOfPages = Math.ceil(dataLength / pageSize) || 1;
   return (
@@ -108,6 +111,12 @@ export default function Table({
             <Spinner animation="grow" />
           </div>
         )}
+        {!loading && !data.length &&
+        <div className="d-flex justify-content-center align-items-center flex-column">
+           <NoContent />
+           <span>{emptyStateMessage}</span>
+        </div>
+        }
       </div>
     </>
   );
