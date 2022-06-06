@@ -8,13 +8,13 @@ import {
   Avatar,
   Table,
   Modal,
-  CheckBoxGroup
+  CheckBoxGroup,
 } from '../../components';
 import { useStudents, useStudyGroups } from '../../hooks';
-import { Column } from '../../components/table';
+import { Column, Item as ActionItem } from '../../components/table';
 import { studentDataToRows } from '../../utilities';
 import { StudentInputs } from '../../services/student';
-import { StudyGroupList, StudentForm } from './components'
+import { StudyGroupList, StudentForm, ConfirmDelete } from './components';
 
 const columns: Column[] = [
   {
@@ -23,7 +23,7 @@ const columns: Column[] = [
   },
   {
     title: '',
-    render: (item: any) => <Avatar firstName={item.name} />,
+    render: (item: ActionItem) => <Avatar firstName={item.name} />,
   },
   {
     title: 'Name',
@@ -36,22 +36,73 @@ const columns: Column[] = [
   {
     title: 'Place and Date of Birth',
     key: 'placeDateOfBirth',
+    render: (item) => `${item.placeOfBirth}, ${item.dateOfBirth}`
   },
   {
     title: 'Groups',
     key: 'groups',
-    render: (item: any) => <StudyGroupList data={item.groups} />,
+    render: (item: ActionItem) => <StudyGroupList data={item.groups} />,
   },
 ];
 
+const add = 'add';
+const remove = 'delete';
+const update = 'update';
+
+type ModalTitles = {
+  [remove]: string;
+  [update]: string;
+  [add]: string;
+};
+
+type ModalContentType = keyof ModalTitles;
+
+const modalTitles: ModalTitles = {
+  [remove]: 'Delete a student confirmation!',
+  [update]: 'Update a student',
+  [add]: 'Add a new student',
+};
+
 export default function Students() {
-  const { loading, data, onSearch, onPageChange, onCreate } = useStudents();
+  const {
+    loading,
+    data,
+    onSearch,
+    onPageChange,
+    onCreate,
+    onDelete,
+    onUpdate,
+  } = useStudents();
   const [showModal, setShowModal] = useState(false);
   const { data: groups, loading: groupsLoading } = useStudyGroups();
+  const [modalContentType, setModalContentType] =
+    useState<ModalContentType>(add);
+  const [modalTitle, setModalTitle] = useState<string>(modalTitles[add]);
+  const [actionItem, setActionItem] = useState<ActionItem>();
+
+  const hideModal = () => {
+    setShowModal(false);
+    setActionItem(undefined);
+  };
+  const openModal = () => {
+    setShowModal(true);
+  };
 
   const handleStudentCreate = (form: StudentInputs) => {
     onCreate(form);
-    setShowModal(false);
+    hideModal();
+  };
+
+  const handleStudentUpdate = (form: Partial<StudentInputs>) => {
+    if (!actionItem) return;
+    onUpdate(actionItem.id, form);
+    hideModal();
+  };
+
+  const handleDelete = () => {
+    if (!actionItem) return;
+    onDelete(actionItem?.id);
+    hideModal();
   };
 
   const onGroupFilterChange = useCallback(
@@ -62,6 +113,38 @@ export default function Students() {
     },
     [onSearch]
   );
+
+  const renderModalContent = () => {
+    if (!actionItem) return;
+    switch (modalContentType) {
+      case update: {
+        const { name, sex, placeOfBirth, dateOfBirth, email } = actionItem;
+        return (
+          <StudentForm
+            onSubmit={handleStudentUpdate}
+            value={{
+              name,
+              sex,
+              placeOfBirth,
+              dateOfBirth,
+              email
+            }}
+          />
+        );
+      }
+      case remove:
+        return <ConfirmDelete onOk={handleDelete} onCancel={hideModal} />;
+      default:
+        return <StudentForm onSubmit={handleStudentCreate} />;
+    }
+  };
+
+  const onAction = (type: ModalContentType, item?: ActionItem) => {
+    setModalContentType(type);
+    setModalTitle(modalTitles[type]);
+    openModal();
+    setActionItem(item);
+  };
 
   return (
     <div>
@@ -104,17 +187,15 @@ export default function Students() {
             dataLength={data?.count}
             loading={loading}
             onPageChange={onPageChange}
-            onAddItem={() => setShowModal(true)}
+            onAddItem={() => onAction(add)}
+            onEditItem={(item: ActionItem) => onAction(update, item)}
+            onDeleteItem={(item: ActionItem) => onAction(remove, item)}
             emptyStateMessage='No students available!'
           />
         </Col>
       </Row>
-      <Modal
-        title='Add a new student'
-        show={showModal}
-        onHide={() => setShowModal(false)}
-      >
-        <StudentForm onSubmit={handleStudentCreate} />
+      <Modal title={modalTitle} show={showModal} onHide={hideModal}>
+        {renderModalContent()}
       </Modal>
     </div>
   );

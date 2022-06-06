@@ -27,4 +27,12 @@ export default class StudentAPI extends API {
   static create(inputs: StudentInputs): AxiosPromise {
     return this.post(this.baseUrl, inputs)
   }
+
+  static remove(id: number): AxiosPromise {
+    return this.delete(`${this.baseUrl}/${id}`)
+  }
+
+  static update(id: number, body: Partial<StudentInputs>): AxiosPromise {
+    return this.put(`${this.baseUrl}/${id}`, body)
+  }
 }

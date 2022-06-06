@@ -13,6 +13,7 @@ type FormInput = {
 
 type StudentFormProps = {
   onSubmit: (form: StudentInputs) => void;
+  value?: Partial<StudentInputs>;
 };
 
 const studentFormInput: FormInput[] = [
@@ -49,13 +50,14 @@ const studentFormInput: FormInput[] = [
 ];
 
 
-export default function StudentForm({ onSubmit }: StudentFormProps): JSX.Element {
+export default function StudentForm({ onSubmit, value = {} }: StudentFormProps): JSX.Element {
   const [form, setForm] = useState<StudentInputs>({
     name: '',
     sex: 'Male',
     placeOfBirth: '',
     dateOfBirth: '',
     email: '',
+    ...value
   });
   const handleSubmit = (e: React.FormEvent<EventTarget>) => {
     e.preventDefault();
@@ -68,6 +70,7 @@ export default function StudentForm({ onSubmit }: StudentFormProps): JSX.Element
       [key]: value,
     });
   };
+
   return (
     <Form onSubmit={handleSubmit}>
       <Row>

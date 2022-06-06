@@ -41,8 +41,8 @@ export function CheckBoxGroupLoader() {
         getRandomSize(),
         getRandomSize(),
         getRandomSize(),
-      ].map((xs) => (
-        <CheckBoxLoader key={xs} className='mb-2' xs={xs} />
+      ].map((xs, index) => (
+        <CheckBoxLoader key={index} className='mb-2' xs={xs} />
       ))}
     </Placeholder>
   );
@@ -78,7 +78,7 @@ export default function CheckBoxGroup({
           type={'checkbox'}
           label={label}
           id={value}
-          onClick={() => onCheck(value)}
+          onChange={() => onCheck(value)}
           key={value}
           checked={!!selected.find((option) => option === value)}
         />

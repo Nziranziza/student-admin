@@ -5,7 +5,7 @@ export const createStudentSchema = Joi.object()
     name: Joi.string().required(),
     sex: Joi.string().required(),
     placeOfBirth: Joi.string(),
-    dateOfBirth: Joi.string(),
+    dateOfBirth: Joi.date(),
     email: Joi.string().required(),
   })
   .options({
@@ -17,7 +17,7 @@ export const updateStudentSchema = Joi.object()
     name: Joi.string(),
     sex: Joi.string(),
     placeOfBirth: Joi.string(),
-    dateOfBirth: Joi.string(),
+    dateOfBirth: Joi.date(),
     email: Joi.string(),
   })
   .options({

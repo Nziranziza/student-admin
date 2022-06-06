@@ -2,8 +2,10 @@ type StudentRow = {
   id: number;
   name: string;
   sex: string;
-  placeDateOfBirth: string;
   groups: string[];
+  placeOfBirth: string;
+  dateOfBirth: string;
+  email: string;
 };
 export function createStudentRow(
   id: number,
@@ -11,14 +13,17 @@ export function createStudentRow(
   sex: string = '',
   placeOfBirth: string = '',
   dateOfBirth: string = '',
-  groups: any[] = []
+  groups: any[] = [],
+  email: string = ''
 ): StudentRow {
   return {
     id,
     name,
     sex,
-    placeDateOfBirth: `${placeOfBirth}, ${dateOfBirth}`,
+    placeOfBirth,
+    dateOfBirth,
     groups: groups.map(({ name }) => name),
+    email,
   };
 }
 
@@ -30,7 +35,8 @@ export function studentDataToRows(data: any[] = []): StudentRow[] {
       student.sex,
       student.placeOfBirth,
       student.dateOfBirth,
-      student.enrollments?.map(({ StudyGroup }: any) => StudyGroup)
+      student.enrollments?.map(({ StudyGroup }: any) => StudyGroup),
+      student.email
     )
   );
 }
