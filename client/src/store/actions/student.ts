@@ -3,13 +3,9 @@ import {
   ADD_STUDENTS, 
   ADD_STUDENT, 
   DELETE_STUDENT, 
-  UPDATE_STUDENT 
+  UPDATE_STUDENT,
+  Action
 } from '../types';
-
-type Action<P> = {
-  type: string;
-  payload: P
-}
 
 export const addStudents = (students: any, dispatch: Dispatch<Action<any>>) => {
   dispatch({

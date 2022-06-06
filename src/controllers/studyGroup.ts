@@ -1,17 +1,29 @@
 import { NextFunction, Request, Response } from 'express';
+import { ParamsDictionary } from 'express-serve-static-core';
 
 import { studyGroupService, enrollmentService } from '../services';
 import { HTTP_STATUS } from '../constants';
 
 const notfound = 'study group with such id is not found';
 
+type Query = {
+  search: string;
+  limit: string;
+  page: string
+}
+
 export const getAll = async (
-  req: Request,
+  req: Request<ParamsDictionary, any, any, Query>,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const studyGroups = await studyGroupService.getAll();
+    const { search, limit=10, page = 1 } = req.query;
+    const studyGroups = await studyGroupService.getAll({
+      search,
+      limit: Number(limit),
+      page: Number(page)
+    });
     return res.status(HTTP_STATUS.OK).json(studyGroups);
   } catch (error) {
     return next(error);

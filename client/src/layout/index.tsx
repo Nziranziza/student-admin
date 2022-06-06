@@ -1,16 +1,15 @@
 import { Card } from 'react-bootstrap';
 import { Outlet } from 'react-router-dom';
-import { useContext } from 'react';
 
-import { Store } from '../store';
 import { TabNavigation } from '../components';
 import { TabOption } from '../components/tab-navigation';
+import { useStudents, useStudyGroups } from '../hooks';
 
 export default function Layout() {
-  const { state } = useContext(Store);
+  const { data: students } = useStudents();
+  const { data: studyGroups } = useStudyGroups();
 
   const getOptions = (): TabOption[] => {
-    const { students, studyGroups } = state;
     return [
       {
         title: 'Students',
@@ -19,7 +18,7 @@ export default function Layout() {
       },
       {
         title: 'Study groups',
-        description: `${studyGroups.length} study groups`,
+        description: `${studyGroups.count} study groups with ${studyGroups.studentCount} students`,
         link: '/study-groups'
       }
     ]

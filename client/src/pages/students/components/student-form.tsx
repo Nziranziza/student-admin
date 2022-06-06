@@ -59,6 +59,7 @@ export default function StudentForm({ onSubmit, value = {} }: StudentFormProps):
     email: '',
     ...value
   });
+  
   const handleSubmit = (e: React.FormEvent<EventTarget>) => {
     e.preventDefault();
     onSubmit(form);
@@ -113,7 +114,7 @@ export default function StudentForm({ onSubmit, value = {} }: StudentFormProps):
         )}
       </Row>
       <div className="d-flex justify-content-end">
-        <Button className="text-end" type="submit">
+        <Button disabled={!form.email || !form.name} className="text-end" type="submit">
           Save
         </Button>
       </div>

@@ -9,12 +9,13 @@ import {
   Table,
   Modal,
   CheckBoxGroup,
+  ConfirmDelete
 } from '../../components';
 import { useStudents, useStudyGroups } from '../../hooks';
 import { Column, Item as ActionItem } from '../../components/table';
 import { studentDataToRows } from '../../utilities';
 import { StudentInputs } from '../../services/student';
-import { StudyGroupList, StudentForm, ConfirmDelete } from './components';
+import { StudyGroupList, StudentForm } from './components';
 
 const columns: Column[] = [
   {
@@ -84,6 +85,7 @@ export default function Students() {
     setShowModal(false);
     setActionItem(undefined);
   };
+
   const openModal = () => {
     setShowModal(true);
   };
@@ -115,9 +117,9 @@ export default function Students() {
   );
 
   const renderModalContent = () => {
-    if (!actionItem) return;
     switch (modalContentType) {
       case update: {
+        if (!actionItem) return;
         const { name, sex, placeOfBirth, dateOfBirth, email } = actionItem;
         return (
           <StudentForm
@@ -143,7 +145,9 @@ export default function Students() {
     setModalContentType(type);
     setModalTitle(modalTitles[type]);
     openModal();
-    setActionItem(item);
+    if(item) {
+      setActionItem(item);
+    }
   };
 
   return (
@@ -163,7 +167,7 @@ export default function Students() {
           <div className='mt-3 mt-md-5 mb-3'>
             <label className='text-muted mb-2'>FILTERS FOR STUDY GROUPS</label>
             <CheckBoxGroup
-              options={groups.map(({ name, id }) => ({
+              options={groups.data.map(({ name, id }: any) => ({
                 label: name,
                 value: id,
               }))}
@@ -177,7 +181,7 @@ export default function Students() {
             tableTitle={
               <>
                 <FontAwesomeIcon icon={faUserAlt} />
-                <span className='fw-bolder ms-3'>{data.count} students</span>
+                <span className='fw-bolder ms-2'>{data.count} Students</span>
               </>
             }
             pageSize={data?.pageSize}

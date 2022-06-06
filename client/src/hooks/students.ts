@@ -42,9 +42,9 @@ export function useStudents(): UseStudents {
 
   const onSearch = debounce((_filters: StudentFilters = {}) => {
     setFilters({
-      page: 1,
       ...filters,
-      ..._filters
+      ..._filters,
+      page: 1,
     });
   }, 500);
 
