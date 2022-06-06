@@ -32,4 +32,16 @@ export default class StudyGroupAPI extends API {
   static create(form: StudyGroupInputs): AxiosPromise {
     return this.post(this.baseUrl, form)
   }
+
+  static removeMember(id: number, studentId: number): AxiosPromise {
+    return this.delete(`${this.baseUrl}/${id}/leave`, {}, {
+      studentId
+    })
+  };
+
+  static addMember(id: number, studentId: number): AxiosPromise {
+    return this.post(`${this.baseUrl}/${id}/join`, {
+      studentId
+    })
+  }
 }

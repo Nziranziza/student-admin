@@ -9,6 +9,8 @@ import {
   deleteStudyGroup,
   updateStudyGroup,
   addStudyGroup,
+  addStudentToStudyGroup,
+  removeStudentFromStudyGroup
 } from '../store/actions';
 
 type UseStudyGroups = {
@@ -105,4 +107,47 @@ export function useStudyGroups(): UseStudyGroups {
     onDelete,
     onPageChange
   };
+}
+
+export function useStudyGroupMembers() {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<any>(null);
+  const { dispatch } = useContext(Store);
+
+  const onAdd = async (groupId: number, student: any) => {
+    try {
+      setLoading(true);
+      await StudyGroupService.addMember(groupId, student.id);
+      addStudentToStudyGroup({
+        id: groupId,
+        student
+      }, dispatch)
+    } catch(error) {
+      setError(error)
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const onRemove = async (groupId: number, student: any) => {
+    try {
+      setLoading(true);
+      await StudyGroupService.removeMember(groupId, student.id);
+      removeStudentFromStudyGroup({
+        id: groupId,
+        student
+      }, dispatch)
+    } catch(error) {
+      setError(error)
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return {
+    onRemove,
+    onAdd,
+    loading,
+    error
+  }
 }

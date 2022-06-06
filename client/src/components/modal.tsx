@@ -12,6 +12,7 @@ type ModalProps = {
   okText?: string;
   cancelText?: string;
   hasFooter?: boolean;
+  size?: 'sm' | 'lg' | 'xl'
 };
 
 export default function Modal({
@@ -23,9 +24,10 @@ export default function Modal({
   okText = 'Ok',
   cancelText = 'Cancel',
   hasFooter = false,
+  size
 }: ModalProps) {
   return (
-    <DefaultModal centered show={show} onHide={onHide}>
+    <DefaultModal size={size} centered show={show} onHide={onHide}>
       <DefaultModal.Header>
         <DefaultModal.Title>{title}</DefaultModal.Title>
         <Button variant="" onClick={onHide} className="rounded-circle"><FontAwesomeIcon icon={faClose} /></Button>

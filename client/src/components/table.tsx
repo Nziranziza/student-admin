@@ -7,8 +7,8 @@ import { NoContent } from './icons';
 
 export type Item = {
   [key: string]: any;
-  id: number
-}
+  id: number;
+};
 
 export type Column = {
   title: string;
@@ -112,13 +112,23 @@ export default function Table({
                     {render ? render(item) : `${key ? item[key] : ''}`}
                   </td>
                 ))}
-                <td>
-                  <Button onClick={() => onEditItem(item)} className='me-2 p-0 shadow-none' variant=''>
-                    <FontAwesomeIcon color='#6A8FFF' icon={faEdit} />
-                  </Button>
-                  <Button onClick={() => onDeleteItem(item)} className='me-2 p-0 shadow-none' variant=''>
-                    <FontAwesomeIcon color='#E05E6A' icon={faTrash} />
-                  </Button>
+                <td className="text-nowrap">
+                  <div>
+                    <Button
+                      onClick={() => onEditItem(item)}
+                      className='me-2 p-0 shadow-none'
+                      variant=''
+                    >
+                      <FontAwesomeIcon color='#6A8FFF' icon={faEdit} />
+                    </Button>
+                    <Button
+                      onClick={() => onDeleteItem(item)}
+                      className='p-0 shadow-none'
+                      variant=''
+                    >
+                      <FontAwesomeIcon color='#E05E6A' icon={faTrash} />
+                    </Button>
+                  </div>
                 </td>
               </tr>
             ))}

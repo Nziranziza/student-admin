@@ -52,6 +52,7 @@ export default function StudyGroups() {
   const [modalContentType, setModalContentType] =
     useState<ModalContentType>(add);
   const [actionItem, setActionItem] = useState<ActionItem>();
+  const [modalSize, setModalSize] = useState<'lg' | undefined>();
 
   const hideModal = () => {
     setShowModal(false);
@@ -82,7 +83,7 @@ export default function StudyGroups() {
     switch (modalContentType) {
       case update:
         if (!actionItem) return;
-        const { name, time, subject, leader } = actionItem;
+        const { name, time, subject, leader, enrolled } = actionItem;
         return (
           <StudyGroupForm
             value={{
@@ -91,7 +92,10 @@ export default function StudyGroups() {
               subject,
               leader,
             }}
+            students={enrolled.map(({  Student }: any) => Student)}
             onSubmit={handleStudyGroupUpdate}
+            type="update"
+            groupId={actionItem.id}
           />
         );
       case remove:
@@ -107,6 +111,11 @@ export default function StudyGroups() {
     openModal();
     if (item) {
       setActionItem(item);
+    }
+    if(type === update) {
+      setModalSize('lg')
+    } else {
+      setModalSize(undefined)
     }
   };
 
@@ -131,7 +140,7 @@ export default function StudyGroups() {
         onDeleteItem={(item: ActionItem) => onAction(remove, item)}
         onPageChange={onPageChange}
       />
-      <Modal onHide={hideModal} show={showModal} title={modalTitle}>
+      <Modal size={modalSize} onHide={hideModal} show={showModal} title={modalTitle}>
         {renderModalContent()}
       </Modal>
     </div>

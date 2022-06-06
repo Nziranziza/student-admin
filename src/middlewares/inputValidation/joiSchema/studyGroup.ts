@@ -13,10 +13,10 @@ export const createStudyGroupSchema = Joi.object()
 
 export const updateStudyGroupSchema = Joi.object()
   .keys({
-    name: Joi.string(),
-    leader: Joi.string(),
-    subject: Joi.string(),
-    time: Joi.string(),
+    name: Joi.string().allow(''),
+    leader: Joi.string().allow(''),
+    subject: Joi.string().allow(''),
+    time: Joi.string().allow(''),
   })
   .options({
     abortEarly: false,
