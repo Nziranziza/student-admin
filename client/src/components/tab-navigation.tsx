@@ -13,7 +13,7 @@ type TabNavigationProps = {
 
 export default function TabNavigation({
   options
-}: TabNavigationProps) {
+}: TabNavigationProps): JSX.Element {
   return (
     <Nav variant="tabs">
       {options.map(({ title, description, link }) => <Nav.Item key={title} className="col-6 col-md-4 me-2">

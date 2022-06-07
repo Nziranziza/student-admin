@@ -1,6 +1,6 @@
 import Joi from 'joi';
 
-export const createStudentSchema = Joi.object()
+export const createStudentSchema: Joi.ObjectSchema = Joi.object()
   .keys({
     name: Joi.string().required(),
     sex: Joi.string().required(),
@@ -12,7 +12,7 @@ export const createStudentSchema = Joi.object()
     abortEarly: false,
   });
 
-export const updateStudentSchema = Joi.object()
+export const updateStudentSchema: Joi.ObjectSchema = Joi.object()
   .keys({
     name: Joi.string().allow(''),
     sex: Joi.string().allow(''),

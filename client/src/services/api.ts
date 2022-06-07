@@ -1,29 +1,28 @@
-import axios, { AxiosPromise } from 'axios';
-
+import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import { toast } from 'react-toastify';
 
 
-const instance = axios.create({
+const instance: AxiosInstance = axios.create({
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   },
 });
 
-instance.interceptors.response.use(function (response) {
+instance.interceptors.response.use(function (response: AxiosResponse) {
   return response.data;
 }, function (error) {
   const highLevelMsg = error.message;
   const message = error?.response?.data?.message;
   toast.error(message || highLevelMsg);
-  if(error?.response?.data) {
+  if (error?.response?.data) {
     return Promise.reject(error?.response?.data);
   }
   return Promise.reject(null);
 });
 
 export default class API {
-  
-  static get(url: string, params = {}): AxiosPromise {
+
+  static get(url: string, params = {}): Promise<any> {
     return instance({
       method: 'GET',
       url,
@@ -31,7 +30,7 @@ export default class API {
     })
   }
 
-  static post(url: string, data = {}, params = {}): AxiosPromise {
+  static post(url: string, data = {}, params = {}): Promise<any> {
     return instance({
       method: 'POST',
       url,
@@ -40,7 +39,7 @@ export default class API {
     })
   }
 
-  static put(url: string, data = {}, params = {}): AxiosPromise {
+  static put(url: string, data = {}, params = {}): Promise<any> {
     return instance({
       method: 'PUT',
       url,
@@ -49,7 +48,7 @@ export default class API {
     });
   }
 
-  static delete(url: string, params = {}, data = {}): AxiosPromise {
+  static delete(url: string, params = {}, data = {}): Promise<any> {
     return instance({
       method: 'DELETE',
       url,

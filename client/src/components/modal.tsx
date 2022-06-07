@@ -25,7 +25,7 @@ export default function Modal({
   cancelText = 'Cancel',
   hasFooter = false,
   size
-}: ModalProps) {
+}: ModalProps): JSX.Element {
   return (
     <DefaultModal size={size} centered show={show} onHide={onHide}>
       <DefaultModal.Header>

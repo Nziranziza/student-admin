@@ -11,6 +11,7 @@ import { Avatar } from '../../../components';
 import { StudyGroupInputs } from '../../../services/studyGroup';
 import { Store } from '../../../store';
 import { useStudyGroupMembers } from '../../../hooks';
+import { GetStudentResponse } from '../../../services/student';
 
 type FormInput = {
   type: 'input' | 'textarea';
@@ -22,7 +23,7 @@ type FormInput = {
 type StudyGroupFormProps = {
   onSubmit: (form: StudyGroupInputs) => void;
   value?: Partial<StudyGroupInputs>;
-  students?: any[];
+  students?: GetStudentResponse[];
   type?: 'create' | 'update';
   groupId?: number;
 };
@@ -59,7 +60,7 @@ type StudentItemProp = {
   onClick?: () => void
 };
 
-function StudentItem({ name, icon = faTrash, onClick }: StudentItemProp) {
+function StudentItem({ name, icon = faTrash, onClick }: StudentItemProp): JSX.Element {
   return (
     <div className='d-flex align-items-center justify-content-between'>
       <div className='d-flex align-items-center'>
@@ -74,16 +75,16 @@ function StudentItem({ name, icon = faTrash, onClick }: StudentItemProp) {
 }
 
 type StudentPickerProps = {
-  options: any[],
-  onSelect: any
+  options: GetStudentResponse[],
+  onSelect: (option: GetStudentResponse) => void
 }
 
-function StudentPicker({ options = [], onSelect }: StudentPickerProps) {
+function StudentPicker({ options = [], onSelect }: StudentPickerProps): JSX.Element {
   return (
     <Dropdown>
       <Dropdown.Toggle variant='secondary'>Add a member</Dropdown.Toggle>
       <Dropdown.Menu>
-        {options.map((option: any) => (
+        {options.map((option) => (
           <Dropdown.Item key={option.id} onClick={() => onSelect(option)}>
             <StudentItem name={option.name} icon={faAdd} />
           </Dropdown.Item>
@@ -126,13 +127,13 @@ export default function StudyGroupForm({
 
   const isUpdate = type === 'update';
 
-  const handleRemoveGroupMember = (student: any) => {
+  const handleRemoveGroupMember = (student: GetStudentResponse) => {
     if (!groupId) return;
     onRemove(groupId, student);
     setStudents(_students.filter(st => st.id !== student.id))
   };
 
-  const handleAddGroupMember = (student: any) => {
+  const handleAddGroupMember = (student: GetStudentResponse) => {
     if (!groupId) return;
     onAdd(groupId, student);
     setStudents([
@@ -166,7 +167,7 @@ export default function StudyGroupForm({
           {isUpdate && (
             <StudentPicker
               options={state.students.data.filter(
-                (item: any) =>
+                (item) =>
                   !_students.find((student) => student.id === item.id)
               )}
               onSelect={handleAddGroupMember}

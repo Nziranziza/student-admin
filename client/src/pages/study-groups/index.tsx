@@ -3,10 +3,11 @@ import { faUserGroup } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
 
 import { Table, Modal, ConfirmDelete } from '../../components';
-import { Column, Item as ActionItem } from '../../components/table';
+import { Column } from '../../components/table';
 import { useStudyGroups } from '../../hooks';
 import { StudyGroupForm } from './components';
 import { StudyGroupInputs } from '../../services/studyGroup';
+import { GetStudyGroupResponse } from '../../services/studyGroup';
 
 const columns: Column[] = [
   {
@@ -45,13 +46,13 @@ const modalTitles: ModalTitles = {
   [add]: 'Add a new study group',
 };
 
-export default function StudyGroups() {
+export default function StudyGroups(): JSX.Element {
   const [showModal, setShowModal] = useState(false);
   const { loading, data, onCreate, onDelete, onUpdate, onPageChange } = useStudyGroups();
   const [modalTitle, setModalTitle] = useState<string>(modalTitles[add]);
   const [modalContentType, setModalContentType] =
     useState<ModalContentType>(add);
-  const [actionItem, setActionItem] = useState<ActionItem>();
+  const [actionItem, setActionItem] = useState<GetStudyGroupResponse>();
   const [modalSize, setModalSize] = useState<'lg' | undefined>();
 
   const hideModal = () => {
@@ -79,7 +80,7 @@ export default function StudyGroups() {
     hideModal();
   };
 
-  const renderModalContent = () => {
+  const renderModalContent = (): JSX.Element | undefined => {
     switch (modalContentType) {
       case update:
         if (!actionItem) return;
@@ -92,7 +93,7 @@ export default function StudyGroups() {
               subject,
               leader,
             }}
-            students={enrolled.map(({  Student }: any) => Student)}
+            students={enrolled.map(({  student }) => student)}
             onSubmit={handleStudyGroupUpdate}
             type="update"
             groupId={actionItem.id}
@@ -105,7 +106,7 @@ export default function StudyGroups() {
     }
   };
 
-  const onAction = (type: ModalContentType, item?: ActionItem) => {
+  const onAction = (type: ModalContentType, item?: GetStudyGroupResponse) => {
     setModalContentType(type);
     setModalTitle(modalTitles[type]);
     openModal();
@@ -136,8 +137,8 @@ export default function StudyGroups() {
         className='mt-3 mt-md-5'
         emptyStateMessage='No groups so far!'
         onAddItem={() => onAction(add)}
-        onEditItem={(item: ActionItem) => onAction(update, item)}
-        onDeleteItem={(item: ActionItem) => onAction(remove, item)}
+        onEditItem={(item: GetStudyGroupResponse) => onAction(update, item)}
+        onDeleteItem={(item: GetStudyGroupResponse) => onAction(remove, item)}
         onPageChange={onPageChange}
       />
       <Modal size={modalSize} onHide={hideModal} show={showModal} title={modalTitle}>

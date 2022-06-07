@@ -1,8 +1,9 @@
 import { debounce } from 'lodash';
 import { useState, useEffect, useContext, useCallback } from 'react';
-import { StudyGroupService } from '../services';
-import { StudyGroupFilters, StudyGroupInputs } from '../services/studyGroup';
 
+import { StudyGroupService } from '../services';
+import { StudyGroupFilters, StudyGroupInputs, GetAllStudyGroupResponse } from '../services/studyGroup';
+import { GetStudentResponse } from '../services/student';
 import { Store } from '../store';
 import {
   addStudyGroups,
@@ -15,7 +16,7 @@ import {
 
 type UseStudyGroups = {
   loading: boolean;
-  data: any;
+  data: GetAllStudyGroupResponse;
   error: any;
   onSearch: (filters: StudyGroupFilters) => void;
   onPageChange: (pageNumber?: number) => void;
@@ -23,6 +24,13 @@ type UseStudyGroups = {
   onDelete: (id: number) => void;
   onUpdate: (id: number, form: Partial<StudyGroupInputs>) => void
 };
+
+type UseStudyGroupMembers = {
+  onRemove: (groupId: number, student: GetStudentResponse) => void;
+  onAdd: (groupId: number, student: GetStudentResponse) => void;
+  loading: boolean;
+  error: any
+}
 
 export function useStudyGroups(): UseStudyGroups {
   const [loading, setLoading] = useState(false);
@@ -109,12 +117,12 @@ export function useStudyGroups(): UseStudyGroups {
   };
 }
 
-export function useStudyGroupMembers() {
+export function useStudyGroupMembers(): UseStudyGroupMembers {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<any>(null);
   const { dispatch } = useContext(Store);
 
-  const onAdd = async (groupId: number, student: any) => {
+  const onAdd = async (groupId: number, student: GetStudentResponse) => {
     try {
       setLoading(true);
       await StudyGroupService.addMember(groupId, student.id);
@@ -129,7 +137,7 @@ export function useStudyGroupMembers() {
     }
   }
 
-  const onRemove = async (groupId: number, student: any) => {
+  const onRemove = async (groupId: number, student: GetStudentResponse) => {
     try {
       setLoading(true);
       await StudyGroupService.removeMember(groupId, student.id);

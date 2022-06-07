@@ -8,7 +8,7 @@ type ConfirmDeleteProps = {
 export default function ConfirmDelete({
   onOk,
   onCancel
-}: ConfirmDeleteProps) {
+}: ConfirmDeleteProps): JSX.Element {
   return <div className="d-flex justify-content-end">
     <Button variant="light" className="me-3" onClick={onCancel}>Cancel</Button>
     <Button variant="danger" onClick={onOk}>Delete</Button>

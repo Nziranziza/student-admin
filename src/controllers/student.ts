@@ -3,9 +3,7 @@ import { UniqueConstraintError } from 'sequelize';
 import { ParamsDictionary } from 'express-serve-static-core';
 
 import { studentService } from '../services';
-import { HTTP_STATUS } from '../constants';
-
-const notfound = 'student with such id is not found';
+import { HTTP_STATUS, RESPONSE_MESSAGES } from '../constants';
 
 type Query = {
   page: string;
@@ -44,7 +42,7 @@ export const getById = async (
     const student = await studentService.getById(id);
     if (!student) {
       return res.status(HTTP_STATUS.NOT_FOUND).json({
-        message: notfound,
+        message: RESPONSE_MESSAGES.STUDENT_NOT_FOUND,
       });
     }
     return res.status(HTTP_STATUS.OK).json(student);
@@ -67,7 +65,7 @@ export const create = async (
   } catch (error) {
     if (error instanceof UniqueConstraintError) {
       return res.status(HTTP_STATUS.CONFLICT).json({
-        message: 'email already taken',
+        message: RESPONSE_MESSAGES.EMAIL_TAKEN,
       });
     }
     return next(error);
@@ -84,11 +82,11 @@ export const deleteById = async (
     const isDeleted = await studentService.deleteById(id);
     if (!isDeleted) {
       return res.status(HTTP_STATUS.NOT_FOUND).json({
-        message: notfound,
+        message: RESPONSE_MESSAGES.STUDENT_NOT_FOUND,
       });
     }
     return res.status(HTTP_STATUS.NO_CONTENT).json({
-      message: 'deleted',
+      message: RESPONSE_MESSAGES.DELETED,
     });
   } catch (error) {
     return next(error);
@@ -105,7 +103,7 @@ export const update = async (
     const student = await studentService.update(id, req.body);
     if (!student) {
       return res.status(HTTP_STATUS.NOT_FOUND).json({
-        message: notfound,
+        message: RESPONSE_MESSAGES.STUDENT_NOT_FOUND,
       });
     }
     return res.status(HTTP_STATUS.OK).json(student);

@@ -22,7 +22,7 @@ type CheckBoxLoaderProps = {
   xs: number;
 };
 
-const CheckBoxLoader = ({ className, xs }: CheckBoxLoaderProps) => {
+const CheckBoxLoader = ({ className, xs }: CheckBoxLoaderProps): JSX.Element => {
   return (
     <div className={classnames('d-flex', className)}>
       <Placeholder xs='1' className='me-2' />
@@ -31,7 +31,7 @@ const CheckBoxLoader = ({ className, xs }: CheckBoxLoaderProps) => {
   );
 };
 
-export function CheckBoxGroupLoader() {
+export function CheckBoxGroupLoader(): JSX.Element {
   const getRandomSize = () => Math.floor(Math.random() * (10 - 3 + 1)) + 3;
   return (
     <Placeholder bg='dark' animation='glow'>

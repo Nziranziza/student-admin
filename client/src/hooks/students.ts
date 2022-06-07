@@ -4,12 +4,12 @@ import { debounce } from 'lodash';
 import { StudentService } from '../services';
 import { Store } from '../store';
 import { addStudent, addStudents, deleteStudent, updateStudent } from '../store/actions';
-import { StudentFilters, StudentInputs } from '../services/student';
+import { StudentFilters, StudentInputs, GetAllStudentsResponse } from '../services/student';
 
 
 type UseStudents = {
   loading: boolean;
-  data: any;
+  data: GetAllStudentsResponse;
   onSearch: (filters: StudentFilters) => void;
   onPageChange: (pageNumber?: number) => void;
   onCreate: (form: StudentInputs) => void;

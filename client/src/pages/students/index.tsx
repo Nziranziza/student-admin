@@ -12,19 +12,20 @@ import {
   ConfirmDelete
 } from '../../components';
 import { useStudents, useStudyGroups } from '../../hooks';
-import { Column, Item as ActionItem } from '../../components/table';
-import { studentDataToRows } from '../../utilities';
+import { Column } from '../../components/table';
+import { studentDataToRows, StudentRow } from '../../utilities';
 import { StudentInputs } from '../../services/student';
 import { StudyGroupList, StudentForm } from './components';
 
-const columns: Column[] = [
+
+const columns: Column<StudentRow>[] = [
   {
     title: '',
     render: () => <Form.Check type='checkbox' />,
   },
   {
     title: '',
-    render: (item: ActionItem) => <Avatar firstName={item.name} />,
+    render: (item: StudentRow) => <Avatar firstName={item.name} />,
   },
   {
     title: 'Name',
@@ -42,7 +43,7 @@ const columns: Column[] = [
   {
     title: 'Groups',
     key: 'groups',
-    render: (item: ActionItem) => <StudyGroupList data={item.groups} />,
+    render: (item: StudentRow) => <StudyGroupList data={item.groups} />,
   },
 ];
 
@@ -64,7 +65,7 @@ const modalTitles: ModalTitles = {
   [add]: 'Add a new student',
 };
 
-export default function Students() {
+export default function Students(): JSX.Element {
   const {
     loading,
     data,
@@ -79,7 +80,7 @@ export default function Students() {
   const [modalContentType, setModalContentType] =
     useState<ModalContentType>(add);
   const [modalTitle, setModalTitle] = useState<string>(modalTitles[add]);
-  const [actionItem, setActionItem] = useState<ActionItem>();
+  const [actionItem, setActionItem] = useState<StudentRow>();
 
   const hideModal = () => {
     setShowModal(false);
@@ -141,7 +142,7 @@ export default function Students() {
     }
   };
 
-  const onAction = (type: ModalContentType, item?: ActionItem) => {
+  const onAction = (type: ModalContentType, item?: StudentRow) => {
     setModalContentType(type);
     setModalTitle(modalTitles[type]);
     openModal();
@@ -167,9 +168,9 @@ export default function Students() {
           <div className='mt-3 mt-md-5 mb-3'>
             <label className='text-muted mb-2'>FILTERS FOR STUDY GROUPS</label>
             <CheckBoxGroup
-              options={groups.data.map(({ name, id }: any) => ({
+              options={groups.data.map(({ name, id }) => ({
                 label: name,
-                value: id,
+                value: id.toString(),
               }))}
               onChange={onGroupFilterChange}
               loading={groupsLoading}
@@ -192,8 +193,8 @@ export default function Students() {
             loading={loading}
             onPageChange={onPageChange}
             onAddItem={() => onAction(add)}
-            onEditItem={(item: ActionItem) => onAction(update, item)}
-            onDeleteItem={(item: ActionItem) => onAction(remove, item)}
+            onEditItem={(item: StudentRow) => onAction(update, item)}
+            onDeleteItem={(item: StudentRow) => onAction(remove, item)}
             emptyStateMessage='No students available!'
           />
         </Col>

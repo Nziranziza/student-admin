@@ -4,7 +4,7 @@ type IconProps = {
 
 export default function NoContent({
   size = 100
-}: IconProps) {
+}: IconProps): JSX.Element {
   const width = size;
   const height = size * 0.826
   return (

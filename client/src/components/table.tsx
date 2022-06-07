@@ -5,20 +5,20 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAdd, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { NoContent } from './icons';
 
-export type Item = {
-  [key: string]: any;
+export interface Item  {
   id: number;
+  [key: string]: any;
 };
 
-export type Column = {
+export type Column<I = Item> = {
   title: string;
   key?: string;
-  render?: (item: Item) => any;
+  render?: (item: I) => ReactNode;
 };
 
-type TableProps = {
-  columns: Column[];
-  data: Item[];
+export type TableProps<I = Item> = {
+  columns: Column<I>[];
+  data: I[];
   dataLength: number;
   pageSize: number;
   className?: string;
@@ -26,8 +26,8 @@ type TableProps = {
   loading?: boolean;
   onPageChange?: (pageNumber?: number) => void;
   onAddItem?: () => void;
-  onDeleteItem?: (item: Item) => void;
-  onEditItem?: (item: Item) => void;
+  onDeleteItem?: (item: I) => void;
+  onEditItem?: (item: I) => void;
   emptyStateMessage?: string;
 };
 
@@ -66,7 +66,7 @@ export default function Table({
   onDeleteItem = () => {},
   onEditItem = () => {},
   emptyStateMessage = 'No contents!',
-}: TableProps) {
+}: TableProps<any>): JSX.Element {
   const numberOfPages = Math.ceil(dataLength / pageSize) || 1;
   return (
     <>

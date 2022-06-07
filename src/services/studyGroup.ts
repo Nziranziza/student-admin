@@ -24,6 +24,16 @@ type Where = {
   };
 };
 
+const include = [{
+  model: Enrollment,
+  attributes: ['id'],
+  as: 'enrolled',
+  include: [{
+    model: Student,
+    as: 'student'
+  }],
+}]
+
 export const getAll = async ({
   limit = 10,
   page = 1,
@@ -51,14 +61,7 @@ export const getAll = async ({
     limit,
     offset,
     where,
-    include: [
-      {
-        model: Enrollment,
-        attributes: ['id'],
-        as: 'enrolled',
-        include: [Student],
-      },
-    ],
+    include,
   });
 
   return {
@@ -73,14 +76,7 @@ export const getAll = async ({
 
 export const getById = (id: number): Promise<StudyGroup | null> => {
   return StudyGroup.findByPk(id, {
-    include: [
-      {
-        model: Enrollment,
-        attributes: ['id'],
-        as: 'enrolled',
-        include: [Student],
-      },
-    ],
+    include,
   });
 };
 
@@ -100,7 +96,9 @@ export const update = async (
   id: number,
   payload: Partial<StudyGroupInput>
 ): Promise<StudyGroup | null> => {
-  const studyGroup = await StudyGroup.findByPk(id);
+  const studyGroup = await StudyGroup.findByPk(id, {
+    include
+  });
   if (!studyGroup) {
     return null;
   }

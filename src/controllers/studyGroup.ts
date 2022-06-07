@@ -2,9 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { ParamsDictionary } from 'express-serve-static-core';
 
 import { studyGroupService, enrollmentService } from '../services';
-import { HTTP_STATUS } from '../constants';
-
-const notfound = 'study group with such id is not found';
+import { HTTP_STATUS, RESPONSE_MESSAGES } from '../constants';
 
 type Query = {
   search: string;
@@ -18,7 +16,7 @@ export const getAll = async (
   next: NextFunction
 ) => {
   try {
-    const { search, limit=10, page = 1 } = req.query;
+    const { search, limit = 10, page = 1 } = req.query;
     const studyGroups = await studyGroupService.getAll({
       search,
       limit: Number(limit),
@@ -40,7 +38,7 @@ export const getById = async (
     const studyGroup = await studyGroupService.getById(id);
     if (!studyGroup) {
       return res.status(HTTP_STATUS.NOT_FOUND).json({
-        message: notfound,
+        message: RESPONSE_MESSAGES.GROUP_NOT_FOUND,
       });
     }
     return res.status(HTTP_STATUS.OK).json(studyGroup);
@@ -56,7 +54,10 @@ export const create = async (
 ) => {
   try {
     const studyGroup = await studyGroupService.create(req.body);
-    return res.status(HTTP_STATUS.CREATED).json(studyGroup);
+    return res.status(HTTP_STATUS.CREATED).json({
+      ...studyGroup.toJSON(),
+      enrolled: []
+    });
   } catch (error) {
     return next(error);
   }
@@ -72,11 +73,11 @@ export const deleteById = async (
     const isDeleted = await studyGroupService.deleteById(id);
     if (!isDeleted) {
       return res.status(HTTP_STATUS.NOT_FOUND).json({
-        message: notfound,
+        message: RESPONSE_MESSAGES.GROUP_NOT_FOUND,
       });
     }
     return res.status(HTTP_STATUS.NO_CONTENT).json({
-      message: 'deleted',
+      message: RESPONSE_MESSAGES.DELETED,
     });
   } catch (error) {
     return next(error);
@@ -93,7 +94,7 @@ export const update = async (
     const studyGroup = await studyGroupService.update(id, req.body);
     if (!studyGroup) {
       return res.status(HTTP_STATUS.NOT_FOUND).json({
-        message: notfound,
+        message: RESPONSE_MESSAGES.GROUP_NOT_FOUND,
       });
     }
     return res.status(HTTP_STATUS.OK).json(studyGroup);
@@ -102,7 +103,11 @@ export const update = async (
   }
 };
 
-export const join = async (req: Request, res: Response, next: NextFunction) => {
+export const join = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const id = Number(req.params.id);
     const enrollment = await enrollmentService.create({
@@ -111,7 +116,7 @@ export const join = async (req: Request, res: Response, next: NextFunction) => {
     });
     if (!enrollment) {
       return res.status(HTTP_STATUS.UNPROCESSED).json({
-        message: 'can only enroll to 4 study groups',
+        message: RESPONSE_MESSAGES.GROUP_LIMIT,
       });
     }
     return res.status(HTTP_STATUS.CREATED).json(enrollment);
@@ -131,11 +136,11 @@ export const leave = async (
     const isDeleted = await enrollmentService.destroy(id, studentId);
     if (!isDeleted) {
       return res.status(HTTP_STATUS.NOT_FOUND).json({
-        message: 'you do not belongs to this group',
+        message: RESPONSE_MESSAGES.NOT_MEMBER,
       });
     }
     return res.status(HTTP_STATUS.NO_CONTENT).json({
-      message: 'left',
+      message: RESPONSE_MESSAGES.LEFT,
     });
   } catch (error) {
     return next(error);

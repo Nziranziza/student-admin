@@ -28,14 +28,16 @@ type GetAllResponse = {
   data: Student[];
 };
 
-const include = [
-  {
-    model: Enrollment,
-    attributes: ['id'],
-    as: 'enrollments',
-    include: [StudyGroup]
-  }
-]
+const include = {
+  model: Enrollment,
+  attributes: ['id'],
+  as: 'enrollments',
+  separate: false,
+  include: [{
+    model: StudyGroup,
+    as: 'studyGroup'
+  }]
+};
 
 export const getAll = async ({
   limit = 10,
@@ -63,15 +65,21 @@ export const getAll = async ({
 
   const count = await Student.count({
     where,
-    include,
+    include: {
+      ...include,
+      separate: !groups.length
+    },
   });
 
   const data = await Student.findAll({
     limit,
+    subQuery: false,
     offset,
     where,
-    subQuery: false,
-    include,
+    include: {
+      ...include,
+      separate: !groups.length
+    },
   });
   return {
     page,

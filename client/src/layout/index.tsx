@@ -5,7 +5,7 @@ import { TabNavigation } from '../components';
 import { TabOption } from '../components/tab-navigation';
 import { useStudents, useStudyGroups } from '../hooks';
 
-export default function Layout() {
+export default function Layout(): JSX.Element {
   const { data: students } = useStudents();
   const { data: studyGroups } = useStudyGroups();
 

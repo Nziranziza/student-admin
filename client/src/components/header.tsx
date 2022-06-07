@@ -3,7 +3,7 @@ import { Navbar, NavDropdown, Nav } from 'react-bootstrap';
 import logo from '../assets/img/logo.png';
 import Avatar from './avatar';
 
-export default function Header() {
+export default function Header(): JSX.Element {
   return (
     <Navbar className="header justify-content-between">
       <Navbar.Brand href="#">

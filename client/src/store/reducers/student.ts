@@ -7,16 +7,19 @@ import {
   UPDATE_STUDENT,
   Action
 } from '../types';
-import initialState from '../initialState';
+import initialState, { StudentsState } from '../initialState';
+import { GetStudentResponse } from '../../services/student';
 
-const getStudents = (state: any, students: any) => {
+type StudentReducerFunction<P = any> = (state: StudentsState, payload: P) => StudentsState;
+
+const getStudents: StudentReducerFunction<GetStudentResponse> = (state, students) => {
   return {
     ...state,
     ...students,
   };
 };
 
-const addStudent = (state: any, student: any) => {
+const addStudent: StudentReducerFunction<GetStudentResponse> = (state, student) => {
   return {
     ...state,
     count: state.count + 1,
@@ -24,15 +27,15 @@ const addStudent = (state: any, student: any) => {
   };
 };
 
-const deleteStudent = (state: any, id: number) => {
+const deleteStudent: StudentReducerFunction<number> = (state, id) => {
   return {
     ...state,
     count: state.count - 1,
-    data: state.data.filter((item: any) => item.id !== id),
+    data: state.data.filter((item) => item.id !== id),
   };
 };
 
-const updateStudent = (state: any, student: any) => {
+const updateStudent: StudentReducerFunction<GetStudentResponse> = (state, student) => {
   const index = state.data.findIndex((item: any) => item.id === student.id);
   if (index === -1) {
     return state;
@@ -44,7 +47,7 @@ const updateStudent = (state: any, student: any) => {
 };
 
 export default function reducer(
-  state: any = initialState.students,
+  state: StudentsState = initialState.students,
   { payload, type }: Action
 ) {
   switch (type) {

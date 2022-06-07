@@ -2,7 +2,7 @@ type StudyGroupListProps = {
   data: string[];
 };
 
-export default function StudyGroupList({ data }: StudyGroupListProps) {
+export default function StudyGroupList({ data }: StudyGroupListProps): JSX.Element {
   if (data.length > 2) {
     return (
       <span>

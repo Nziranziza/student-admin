@@ -5,7 +5,7 @@ import { ToastContainer } from 'react-toastify';
 import Header from './components/header';
 import AppRoutes from './routes';
 
-function App() {
+function App(): JSX.Element {
   return (
     <Router>
       <Container fluid="xxl">

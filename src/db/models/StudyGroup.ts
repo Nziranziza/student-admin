@@ -1,7 +1,9 @@
 import { DataTypes, Model, ModelStatic, Optional } from 'sequelize';
-import sequelizeConnection from '../config';
 
-interface StudyGroupAttributes {
+import sequelizeConnection from '../config';
+import { EnrollmentAttributes, EnrollmentInput } from './Enrollment';
+
+export interface StudyGroupAttributes {
   id: number;
   name: string;
   leader: string;
@@ -12,7 +14,7 @@ interface StudyGroupAttributes {
 }
 
 type AssociatedModels = {
-  Enrollment: ModelStatic<Model<any, any>>;
+  Enrollment: ModelStatic<Model<EnrollmentAttributes, EnrollmentInput>>;
 };
 
 export interface StudyGroupInput extends Optional<StudyGroupAttributes, 'id'> {}

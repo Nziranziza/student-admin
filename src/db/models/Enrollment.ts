@@ -1,7 +1,11 @@
 import { DataTypes, Model, ModelStatic, Optional } from 'sequelize';
-import sequelizeConnection from '../config';
 
-interface EnrollmentAttributes {
+import sequelizeConnection from '../config';
+import { StudentAttributes, StudentInput } from './Student';
+import { StudyGroupAttributes, StudyGroupInput } from './StudyGroup'
+
+
+export interface EnrollmentAttributes {
   id: number;
   studyGroupId: number;
   studentId: number;
@@ -10,8 +14,8 @@ interface EnrollmentAttributes {
 }
 
 type AssociatedModels = {
-  StudyGroup: ModelStatic<Model<any, any>>;
-  Student: ModelStatic<Model<any, any>>;
+  StudyGroup: ModelStatic<Model<StudyGroupAttributes, StudyGroupInput>>;
+  Student: ModelStatic<Model<StudentAttributes, StudentInput>>;
 };
 
 export interface EnrollmentInput extends Optional<EnrollmentAttributes, 'id'> {}
@@ -27,8 +31,8 @@ class Enrollment
   public readonly updatedAt?: Date;
 
   static associate({ StudyGroup, Student }: AssociatedModels) {
-    this.belongsTo(StudyGroup, { foreignKey: 'studyGroupId', onDelete: 'CASCADE' });
-    this.belongsTo(Student, { foreignKey: 'studentId', onDelete: 'CASCADE' });
+    this.belongsTo(StudyGroup, { foreignKey: 'studyGroupId', onDelete: 'CASCADE', as: 'studyGroup' });
+    this.belongsTo(Student, { foreignKey: 'studentId', onDelete: 'CASCADE', as: 'student' });
   }
 }
 

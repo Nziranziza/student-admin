@@ -9,24 +9,33 @@ import {
   REMOVE_STUDENT_FROM_STUDY_GROUP,
   Action,
 } from '../types';
-import initialState from '../initialState';
+import initialState, { StudyGroupsState } from '../initialState';
+import { GetStudyGroupResponse } from '../../services/studyGroup';
+import { GetStudentResponse } from '../../services/student';
 
-const addStudyGroups = (state: any, studyGroups: any) => {
+
+type StudyGroupReducerFunction<P = any> = (state: StudyGroupsState, payload: P) => StudyGroupsState;
+type LeaveJoinPayload = {
+  id: number,
+  student: GetStudentResponse
+}
+
+const addStudyGroups: StudyGroupReducerFunction<GetStudyGroupResponse> = (state, studyGroups) => {
   return {
     ...state,
     ...studyGroups,
   };
 };
 
-const deleteStudyGroup = (state: any, id: number) => {
+const deleteStudyGroup: StudyGroupReducerFunction<number> = (state, id: number) => {
   return {
     ...state,
     count: state.count - 1,
-    data: state.data.filter((item: any) => item.id !== id),
+    data: state.data.filter((item) => item.id !== id),
   };
 };
 
-const addStudyGroup = (state: any, studyGroup: any) => {
+const addStudyGroup: StudyGroupReducerFunction<GetStudyGroupResponse> = (state, studyGroup) => {
   return {
     ...state,
     count: state.count + 1,
@@ -34,8 +43,8 @@ const addStudyGroup = (state: any, studyGroup: any) => {
   };
 };
 
-const updateStudyGroup = (state: any, studyGroup: any) => {
-  const index = state.data.findIndex((item: any) => item.id === studyGroup.id);
+const updateStudyGroup: StudyGroupReducerFunction<GetStudyGroupResponse> = (state, studyGroup) => {
+  const index = state.data.findIndex((item) => item.id === studyGroup.id);
   if (index === -1) {
     return state;
   }
@@ -45,8 +54,8 @@ const updateStudyGroup = (state: any, studyGroup: any) => {
   };
 };
 
-const addStudentToStudyGroup = (state: any, payload: any) => {
-  const index = state.data.findIndex((item: any) => item.id === payload.id);
+const addStudentToStudyGroup: StudyGroupReducerFunction<LeaveJoinPayload> = (state, payload) => {
+  const index = state.data.findIndex((item) => item.id === payload.id);
   if (index === -1) {
     return state;
   }
@@ -58,9 +67,9 @@ const addStudentToStudyGroup = (state: any, payload: any) => {
         {
           ...state.data[index],
           enrolled: [
-            { Student: payload.student },
+            payload,
             ...state.data[index].enrolled.filter(
-              ({ Student }: any) => Student.id !== payload.student.id
+              ({ student }) => student.id !== payload.student.id
             ),
           ],
         },
@@ -71,8 +80,8 @@ const addStudentToStudyGroup = (state: any, payload: any) => {
   };
 };
 
-const removeStudentFromStudyGroup = (state: any, payload: any) => {
-  const index = state.data.findIndex((item: any) => item.id === payload.id);
+const removeStudentFromStudyGroup: StudyGroupReducerFunction<LeaveJoinPayload> = (state, payload) => {
+  const index = state.data.findIndex((item) => item.id === payload.id);
   if (index === -1) {
     return state;
   }
@@ -85,7 +94,7 @@ const removeStudentFromStudyGroup = (state: any, payload: any) => {
           ...state.data[index],
           enrolled: [
             ...state.data[index].enrolled.filter(
-              ({ Student }: any) => Student.id !== payload.student.id
+              ({ student }) => student.id !== payload.student.id
             ),
           ],
         },
@@ -97,7 +106,7 @@ const removeStudentFromStudyGroup = (state: any, payload: any) => {
 };
 
 export default function reducer(
-  state: any = initialState.studyGroups,
+  state: StudyGroupsState = initialState.studyGroups,
   { payload, type }: Action
 ) {
   switch (type) {

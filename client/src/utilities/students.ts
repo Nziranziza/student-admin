@@ -1,16 +1,19 @@
-type StudentRow = {
+import { GetStudentResponse, Gender } from '../services/student';
+
+export type StudentRow = {
   id: number;
   name: string;
-  sex: string;
+  sex: Gender;
   groups: string[];
   placeOfBirth: string;
   dateOfBirth: string;
   email: string;
 };
+
 export function createStudentRow(
   id: number,
   name: string = '',
-  sex: string = '',
+  sex: Gender,
   placeOfBirth: string = '',
   dateOfBirth: string = '',
   groups: any[] = [],
@@ -27,16 +30,24 @@ export function createStudentRow(
   };
 }
 
-export function studentDataToRows(data: any[] = []): StudentRow[] {
-  return data.map((student: any) =>
+export function studentDataToRows(data: GetStudentResponse[] = []): StudentRow[] {
+  return data.map(({
+    id,
+    name,
+    sex,
+    placeOfBirth,
+    dateOfBirth,
+    enrollments = [],
+    email
+  }) =>
     createStudentRow(
-      student.id,
-      student.name,
-      student.sex,
-      student.placeOfBirth,
-      student.dateOfBirth,
-      student.enrollments?.map(({ StudyGroup }: any) => StudyGroup),
-      student.email
+      id,
+      name,
+      sex,
+      placeOfBirth,
+      dateOfBirth,
+      enrollments?.map(({ studyGroup }) => studyGroup),
+      email
     )
   );
 }

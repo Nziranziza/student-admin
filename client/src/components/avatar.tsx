@@ -10,7 +10,7 @@ export default function Avatar({
   size='md',
   firstName,
   secondName=''
-}: AvatarProps) {
+}: AvatarProps): JSX.Element {
   const isLg = size === 'lg';
   const isSm = size === 'sm';
   return (

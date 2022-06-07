@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction, RequestHandler } from 'express';
 import { ObjectSchema } from 'joi';
 
 import { joiErrorCustomizer } from '../../utilities';
@@ -10,25 +10,25 @@ import {
 } from './joiSchema';
 
 const inputValidation =
-  (schema: ObjectSchema) =>
-  (req: Request, res: Response, next: NextFunction) => {
-    const { body } = req;
-    const { error } = schema.validate(body);
-    if (error) {
-      return res.status(400).send({
-        error: joiErrorCustomizer(error),
-      });
-    }
-    return next();
-  };
+  (schema: ObjectSchema): RequestHandler =>
+    (req: Request, res: Response, next: NextFunction) => {
+      const { body } = req;
+      const { error } = schema.validate(body);
+      if (error) {
+        return res.status(400).send({
+          error: joiErrorCustomizer(error),
+        });
+      }
+      return next();
+    };
 
-export const createStudentInputValidation =
+export const createStudentInputValidation: RequestHandler =
   inputValidation(createStudentSchema);
-export const updateStudentInputValidation =
+export const updateStudentInputValidation: RequestHandler =
   inputValidation(updateStudentSchema);
-export const createStudyGroupInputValidation = inputValidation(
+export const createStudyGroupInputValidation: RequestHandler = inputValidation(
   createStudyGroupSchema
 );
-export const updateStudyGroupInputValidation = inputValidation(
+export const updateStudyGroupInputValidation: RequestHandler = inputValidation(
   updateStudyGroupSchema
 );
