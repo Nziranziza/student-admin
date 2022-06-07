@@ -4,13 +4,13 @@ const isDevMode = process.env.NODE_ENV === 'development';
 
 const databaseInit = async () => {
   await Student.sync({
-    force: isDevMode,
+    alter: isDevMode,
   });
   await StudyGroup.sync({
-    force: isDevMode
+    alter: isDevMode
   });
   await Enrollment.sync({
-    force: isDevMode
+    alter: isDevMode
   })
 }
 

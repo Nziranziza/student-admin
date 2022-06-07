@@ -13,8 +13,18 @@ export default function Avatar({
 }: AvatarProps): JSX.Element {
   const isLg = size === 'lg';
   const isSm = size === 'sm';
+  const colors: string[] = [
+    'bg-primary',
+    'bg-secondary',
+    'bg-warning',
+    'bg-danger',
+    'bg-info',
+    'bg-dark',
+    'bg-success'
+  ];
+  const colorIndex = firstName.length % colors.length;
   return (
-    <div className={classnames("rounded-circle overflow-hidden text-uppercase avatar bg-secondary justify-content-center align-items-center d-flex fw-bold",{
+    <div className={classnames(colors[colorIndex], "rounded-circle overflow-hidden text-uppercase avatar justify-content-center align-items-center d-flex fw-bold",{
       'avatar-lg': isLg,
       'avatar-sm': isSm
     })}>

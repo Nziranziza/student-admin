@@ -51,15 +51,19 @@ DB_HOST = localhost
 DB_DRIVER = mysql
 DB_PASSWORD = 'yourpassword'
 ```
-3. Build for production
+3. Add Seed data
+```
+npm run seed
+```
+4. Build for production
 ```
 npm run build
 ```
-4. Start the server
+5. Start the server
 ```
 npm start
 ```
-5. Open the app in the browser
+6. Open the app in the browser
 ```
 localhost:3000
 ```
