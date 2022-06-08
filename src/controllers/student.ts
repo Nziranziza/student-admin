@@ -108,6 +108,11 @@ export const update = async (
     }
     return res.status(HTTP_STATUS.OK).json(student);
   } catch (error) {
+    if (error instanceof UniqueConstraintError) {
+      return res.status(HTTP_STATUS.CONFLICT).json({
+        message: RESPONSE_MESSAGES.EMAIL_TAKEN,
+      });
+    }
     return next(error);
   }
 };

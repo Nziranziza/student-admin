@@ -16,4 +16,5 @@ export enum RESPONSE_MESSAGES {
   GROUP_NOT_FOUND = 'study group with such id is not found',
   STUDENT_NOT_FOUND = 'student with such id is not found',
   EMAIL_TAKEN = 'email already taken',
+  SOMETHING_WRONG = 'something went wrong!'
 }

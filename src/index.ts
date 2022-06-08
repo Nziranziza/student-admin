@@ -7,16 +7,18 @@ import express, {
 } from 'express';
 import 'dotenv/config';
 import path from 'path';
+import morgan from 'morgan';
 
 import routes from './routes';
 import databaseInit from './db/init';
-import { HTTP_STATUS } from './constants';
+import { HTTP_STATUS, RESPONSE_MESSAGES } from './constants';
 
 const app: Application = express();
-const { PORT = 3000 } = process.env;
+const { PORT = 3000, NODE_ENV } = process.env;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(morgan('dev'));
 
 app.use('/api/v1', routes);
 
@@ -30,7 +32,11 @@ app.use((error: Errback, req: Request, res: Response, next: NextFunction) => {
   if (res.headersSent) {
     return next(error);
   }
-  return res.status(HTTP_STATUS.SERVER_ERROR).json(error);
+  const isDev = NODE_ENV === 'development';
+  return res.status(HTTP_STATUS.SERVER_ERROR).json({
+    message: RESPONSE_MESSAGES.SOMETHING_WRONG,
+    error: isDev ? error : null
+  });
 });
 
 try {
