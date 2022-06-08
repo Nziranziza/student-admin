@@ -834,7 +834,7 @@ export const enrollments: EnrollmentInput[] = [
   },
   {
     studyGroupId: 2,
-    studentId: 2,
+    studentId: 4,
   },
   {
     studyGroupId: 7,
@@ -866,6 +866,6 @@ export const enrollments: EnrollmentInput[] = [
   },
   {
     studyGroupId: 4,
-    studentId: 8,
+    studentId: 9,
   },
 ];
