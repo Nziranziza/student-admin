@@ -1,11 +1,20 @@
-import { useState, useEffect, useContext, useCallback } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { debounce } from 'lodash';
 
 import { StudentService } from '../services';
 import { Store } from '../store';
-import { addStudent, addStudents, deleteStudent, updateStudent } from '../store/actions';
-import { StudentFilters, StudentInputs, GetAllStudentsResponse } from '../services/student';
-
+import {
+  addStudent,
+  addStudents,
+  deleteStudent,
+  updateStudent,
+} from '../store/actions';
+import {
+  StudentFilters,
+  StudentInputs,
+  GetAllStudentsResponse,
+} from '../services/student';
+import { useSmartDataFetch } from './smart-data-fetch';
 
 type UseStudents = {
   loading: boolean;
@@ -14,7 +23,7 @@ type UseStudents = {
   onPageChange: (pageNumber?: number) => void;
   onCreate: (form: StudentInputs) => void;
   onDelete: (id: number) => void;
-  onUpdate: (id: number, form: Partial<StudentInputs>) => void
+  onUpdate: (id: number, form: Partial<StudentInputs>) => void;
   error: any;
 };
 
@@ -23,22 +32,20 @@ export function useStudents(): UseStudents {
   const { state, dispatch } = useContext(Store);
   const [filters, setFilters] = useState<StudentFilters>({});
   const [error, setError] = useState<any>(null);
-
-  const getStudents = useCallback(async () => {
-    try {
-      setLoading(true);
-      const data = await StudentService.getAll(filters);
-      addStudents(data, dispatch);
-    } catch (error) {
-      setError(error);
-    } finally {
-      setLoading(false);
-    }
-  }, [dispatch, filters]);
+  const {
+    loading: smartFetchLoading,
+    data,
+    error: smartFetchError,
+  } = useSmartDataFetch<GetAllStudentsResponse>(
+    StudentService.baseUrl,
+    filters
+  );
 
   useEffect(() => {
-    getStudents();
-  }, [getStudents]);
+    if (data) {
+      addStudents(data, dispatch);
+    }
+  }, [data, dispatch]);
 
   const onSearch = debounce((_filters: StudentFilters = {}) => {
     setFilters({
@@ -71,34 +78,34 @@ export function useStudents(): UseStudents {
     try {
       setLoading(true);
       await StudentService.remove(id);
-      deleteStudent(id, dispatch)
-    } catch(error) {
-      setError(error)
+      deleteStudent(id, dispatch);
+    } catch (error) {
+      setError(error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const onUpdate = async (id: number, form: Partial<StudentInputs>) => {
     try {
-      setLoading(true)
+      setLoading(true);
       const data = await StudentService.update(id, form);
-      updateStudent(data, dispatch)
-    } catch(error) {
-      setError(error)
+      updateStudent(data, dispatch);
+    } catch (error) {
+      setError(error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return {
-    loading,
+    loading: loading || smartFetchLoading,
     data: state.students,
     onSearch,
     onPageChange,
     onCreate,
     onDelete,
     onUpdate,
-    error,
+    error: error || smartFetchError,
   };
 }
