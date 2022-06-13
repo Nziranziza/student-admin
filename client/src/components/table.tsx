@@ -35,10 +35,10 @@ type PageSwitcherProps = {
   size: number;
   onPageChange?: (pageNumber?: number) => void;
 };
-
+// TODO: Refactor when page size grows over width of screen
 function PageSwitcher({ size, onPageChange = () => {} }: PageSwitcherProps) {
   return (
-    <Nav variant='pills' defaultActiveKey='#1'>
+    <Nav className="flex-1 overflow-scroll flex-nowrap ms-2" variant='pills' defaultActiveKey='#1'>
       {Array.from(Array(size).keys()).map((page) => (
         <Nav.Item key={page + 1}>
           <Nav.Link
